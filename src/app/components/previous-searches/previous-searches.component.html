@@ -1,0 +1,12 @@
+<!--------------------------(Previous vehicle's details)---------------------------->
+<span>Previous searches: </span><br/>
+<div *ngIf="vehicleTypes" class="vehicleTypes">
+    <ul *ngFor="let item of vehicleTypes" (click)="navToVehicle(item.modelId)">
+        <h2>{{item.manufacturer}}</h2>
+        <li class="modelName">{{item.modelName}}</li>
+        <li>Daily cost - {{item.dailyCost}}₪ </li>
+        <li>Daily delay - {{item.dailyDelay}}₪</li>
+        <li>Made in {{item.prodYear}}</li>
+        <li>{{item.gear}} gear</li>
+    </ul>
+</div>

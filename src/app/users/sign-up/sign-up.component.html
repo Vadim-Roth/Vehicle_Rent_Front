@@ -1,0 +1,33 @@
+<br/><br/>
+<div >
+<!----------------------------(Sign up form)---------------------------->
+    <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+        <label><label class="requiredF">*</label>Full Name: </label>
+        <input formControlName="fullName" /><br/><br/>
+        <label><label class="requiredF">*</label>User Name: </label>
+        <input formControlName="userName"/><br/><br/>
+        <label>Birth Day: </label>
+        <dp-date-picker [(ngModel)]="birthDay" [ngModelOptions]="{standalone: true}" [config]="datePickerConfig">
+        </dp-date-picker>
+        <br/><div *ngIf="!nameValidation" class="validationError">User Name {{userStr}} already exists!</div><br/>
+        <div *ngIf="!date17Val" class="validationError">User can't be below 17!</div>
+        <label>Gender: </label>
+        <select formControlName="gender" >
+            <option value="Else">Else</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br/><br/>
+        <label><label class="requiredF">*</label>Email: </label>
+        <input formControlName="email"/><br/><br/>
+        <label><label class="requiredF">*</label>Password: </label>
+        <input type="password" formControlName="password"/><br/><br/>
+        <label><label class="requiredF">*</label>Confirm password: </label>
+        <input type="password" formControlName="rePassword"/><br/>
+        <label class="validationError" [hidden]="matchedPass">{{passwordError}}</label><br/><br/>
+        <button [disabled]="signUpForm.invalid">Register</button>
+    </form>
+        <br/>
+<!----------------------------(Validation errors)---------------------------->
+        <label class="emptyFields" [hidden]="signUpForm.valid">
+            Fill out the empty required(*) fields with letters and numbers only!</label>
+</div>

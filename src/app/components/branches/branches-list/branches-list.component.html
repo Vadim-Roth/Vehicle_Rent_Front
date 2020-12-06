@@ -1,0 +1,27 @@
+<!----------------------------(Add branch option for manager)---------------------------->
+<h1>Our Branches</h1><br/>
+<a *ngIf="logged && loggedUser.userRole == 'manager'" (click)="addBranch()">
+    Add a new branch</a><br/><br/>
+    
+<!----------------------------(Branches table)---------------------------->
+<div *ngIf="branches" class="branches">
+    <ul *ngFor="let item of branches">
+        <span *ngIf="logged && loggedUser.userRole == 'manager' && !added && !editing">
+            <img src="assets/delete-icon.png" (click)="deleteBranch(item)"/><img src="assets/edit-icon.png" 
+            (click)="editBranch(item)"/></span>
+        <span *ngIf="editing && loggedUser && loggedUser.userRole == 'manager'"><img src="assets/no-icon.png" 
+            (click)="cancel()"/><img src="assets/yes-icon.png" (click)="finishEdit()"/></span>
+        <li *ngIf="!editing && !added"><h2>{{item.branchName}}</h2></li><li *ngIf="editing">
+                Branch name: <input [(ngModel)]="selectedBranchName"/></li>
+        <li *ngIf="!editing && !added">{{item.location}}</li><li *ngIf="editing">
+            Location: <input [(ngModel)]="selectedBranchLocation"/></li>
+
+<!-------------------------(Adding a new branch options)---------------------------->
+        <span *ngIf="added && loggedUser && loggedUser.userRole == 'manager'"><img src="assets/no-icon.png" 
+            (click)="cancel()"/><img src="assets/yes-icon.png" (click)="confirmBranch()"/></span>
+        <li *ngIf="added">New branch name: <input [(ngModel)]="newBranchName"/></li>
+        <li *ngIf="added">New location: <input [(ngModel)]="newBranchLocation"/></li>
+    </ul>
+</div>
+<!----------------------------(Validation errors)---------------------------->
+<label *ngIf="emptyVal">Fill out the empty fields!</label><br/>

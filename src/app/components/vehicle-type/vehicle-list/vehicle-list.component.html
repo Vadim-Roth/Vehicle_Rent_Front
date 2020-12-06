@@ -1,0 +1,123 @@
+<a [routerLink]="['/latestv']"><img src="assets/u-turn.png"/>   Return to vehicles types</a><br/><br/>
+
+<!-------------------------(Vehicle Type details table)------------------------->
+<table class="vehicleType" *ngIf="vehicleTypeSelected">
+    <tr>
+        <th>Manufacturer</th><th>Model Name</th><th>Daily Cost</th><th>Daily Delay</th>
+        <th>Production Year</th><th>Gear</th>
+    </tr><tr>
+    <td>{{vehicleTypeSelected.manufacturer}}</td>
+    <td>{{vehicleTypeSelected.modelName}}</td>
+    <td>{{vehicleTypeSelected.dailyCost}}₪</td>
+    <td>{{vehicleTypeSelected.dailyDelay}}₪</td>
+    <td>{{vehicleTypeSelected.prodYear}}</td>
+    <td>{{vehicleTypeSelected.gear}}</td></tr>
+</table><br/>
+
+<!-------------------------------(Search options)----------------------------->
+<div class="searchDiv">
+    <span>Availability: </span>
+    <select [(ngModel)]="availability">
+        <option value="Available">Available</option>
+        <option value="notAvailable">Not Available</option>
+        <option value="All">All</option>
+    </select>
+    <span> Search by vehicle number: </span><input type="number" [(ngModel)]="vehicleNumber" />
+    <span> Search by branch: </span><select [(ngModel)]="branchesSearch">
+        <option value="All">All</option>
+        <option *ngFor="let branchItem of allBranches">{{branchItem.location}}</option>
+    </select><br/>
+</div><br/>
+
+<!------------------------------(Vehicles table)-------------------------------->
+<a *ngIf="loggedUser && loggedUser.userRole == 'manager' && vehicleTypeSelected" (click)="addVehicle()">
+    Add a new {{vehicleTypeSelected.modelName}}</a><br/><br/>
+
+<table [formGroup]="vehicleForm" class="vehiclesWrapper">
+    <tr>
+        <th *ngIf="loggedUser && loggedUser.userRole == 'manager'">Edit</th>
+        <th>Picture</th><th>Number</th><th>Speedometer</th><th>Branch</th><th>Funtional?</th><th>Available?</th>
+        <th *ngIf='logged && !added && !editing'>Order Now</th>
+    </tr>
+    <tr [ngClass]="{'message': item.isAvailable && item.isFunctional, 'error': !item.isAvailable || !item.isFunctional}"
+        class="vehicleItem" *ngFor="let item of vehicles|vehicleNumberSerach:vehicleNumber|availabilitySearch:availability
+        |branchSearch:branchesSearch;index as index;">
+        <td *ngIf="!editing && loggedUser && loggedUser.userRole == 'manager'">
+            <img class="clickable" src="assets/delete-icon.png" (click)="deleteVehicle(item)"/>
+            <img class="clickable" src="assets/edit-icon.png" (click)="editVehicle(item)"/>
+        </td>
+        <td *ngIf="editing && loggedUser && loggedUser.userRole == 'manager'">
+            <img class="clickable" src="assets/no-icon.png" (click)="cancel()"/>
+            <img class="clickable" src="assets/yes-icon.png" (click)="finishEdit()" *ngIf="vehicleForm.valid"/>
+        </td>
+        <td><img *ngIf="item.vehiclePicture != null" class="vehicle" src='assets/vehicles/{{item.vehiclePicture}}'/>
+            <img *ngIf="item.vehiclePicture == null" src="assets/no-icon.png"/></td>
+        <td>{{item.vehicleNumber}}</td>
+        <td *ngIf="!editing">{{item.currentKilos}}</td>
+        <td *ngIf="editing"><input type="number" formControlName="currentKilos"/></td>
+        <td *ngIf="!editing">
+            <label *ngIf="item.branchId > 0" class="branch" (click)="openInfo(item)">{{item.branchLocation}}</label>
+            <label class="deleted" *ngIf="item.branchId == 0">Deleted Branch</label></td>
+        <td *ngIf="editing">
+            <div *ngIf="!editingBranch">
+            <img class="clickable" src="assets/edit-icon.png" (click)="editBranch()"/>{{currentLocation}}</div>
+            <div *ngIf="editingBranch">
+                <select formControlName="branchLocations" *ngIf="allBranches">
+                    <option *ngFor="let branchItem of allBranches">{{branchItem.location}}</option>
+                </select></div></td>
+        <td *ngIf="!editing">
+            <ng-template [ngIfElse]="notF" [ngIf]="item.isFunctional"><img src="assets/yes-icon.png"/></ng-template>
+            <ng-template #notF><img src="assets/no-icon.png"/></ng-template></td>
+        <td *ngIf="editing"><select formControlName="isFunctional">
+            <option value="true">Functional</option>
+            <option value="false">Not Functional</option>
+        </select></td>
+        <td *ngIf="!editing">
+            <ng-template [ngIfElse]="notA" [ngIf]="item.isAvailable"><img src="assets/yes-icon.png"/></ng-template>
+            <ng-template #notA><img src="assets/no-icon.png"/></ng-template></td>
+        <td *ngIf="editing">
+            <select formControlName="isAvailable">
+                <option value="true">Available</option>
+                <option value="false">Not Available</option>
+            </select></td>
+        <td *ngIf='logged && !added && !editing'>
+            <ng-template [ngIfElse]="notA" [ngIf]="item.isAvailable && item.isFunctional && item.branchId > 0">
+                <a class='order' [routerLink]="['/orderSum', item.vehicleNumber]">Order Here</a></ng-template>
+            <ng-template #notA><img src="assets/no-icon.png"/></ng-template></td>
+    </tr>
+
+<!----------------------(The table for adding a new Vehicle)------------------>
+    <tr *ngIf="added" class="addRow">
+        <td><img class="clickable" src="assets/no-icon.png" (click)="cancel()"/>
+            <img class="clickable" src="assets/yes-icon.png" (click)="confirmVehicle()" *ngIf="vehicleForm.valid"/></td>
+        <td></td>
+        <td><input type="number" formControlName="vehicleNumber"/></td>
+        <td><input type="number" formControlName="currentKilos"/></td>
+        <td>
+            <select formControlName="branchLocations" *ngIf="allBranches">
+                <option *ngFor="let branchItem of allBranches" [ngValue]="branchItem">{{branchItem.location}}</option>
+            </select></td>
+        <td>
+            <select formControlName="isFunctional">
+                <option value="true">Functional</option>
+                <option value="false">Not Functional</option>
+            </select></td>
+        <td>
+            <select formControlName="isAvailable">
+                <option value="true">Available</option>
+                <option value="false">Not Available</option>
+            </select></td>
+    </tr>
+</table><br/>
+<!------------------------(Vadlidation errors)-------------------------------->
+<label *ngIf="!vehicleForm.valid">Fill out the empty fields with numbers only!</label><br/>
+<label *ngIf="subZeroVal">Speedometer and vehicle number can't go below 0!</label><br/>
+
+<!-------------------------(Branch pop-up)------------------------------------>
+<div *ngIf="infoClicked && selectedBranch" class="branchInfo">
+    <img class="closeX" (click)="closeInfo()" src="assets/no-icon.png" />
+    <div class="branchInsideDiv">
+    <h3>{{selectedBranch.branchName}}</h3>
+    {{selectedBranch.location}}
+    </div>
+</div>

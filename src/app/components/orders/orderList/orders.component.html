@@ -1,0 +1,73 @@
+<!----------------------------(Search options)------------------------->
+<div class='searchDiv'>
+    <span> Search Options:</span>
+    <select [(ngModel)]="searchOptions" >
+        <option value="Open">Open</option>
+        <option value="Closed">Closed</option>
+        <option value="All">All</option>
+    </select>
+    <span> Search by Order Id:</span><input class='smallBox' type="number" [(ngModel)]="orderId" />
+    <span> Search by vehicle number:</span><input type="number" [(ngModel)]="vehicleNumber" /><br/>
+    <span> Search by customer:</span><input [(ngModel)]="customerName" />
+    <span> Free text: </span><input [(ngModel)]="freeText" />
+</div><br/><br/>
+
+<!----------------------------(Orders table)---------------------------->
+<table class="ordersWrapper" [formGroup]="orderForm">
+    <tr>
+        <th *ngIf="loggedUser && loggedUser.userRole == 'manager'">Edit</th>
+        <th>Order Id</th><th>Order Start</th><th>Order End</th><th>Order Real End</th><th>Customer</th>
+        <th>Vehicle</th><th>Employee Registering</th>
+    </tr>
+    <tr [ngClass]="{ 'message': item.orderRealEnd != null, 'error': item.orderRealEnd == null }"
+        class="orderItem" *ngFor="let item of orderList|orderIdSearch:orderId|orderOptionsSearch:searchOptions
+        |vehicleNumberSerach:vehicleNumber|customerSearch:customerName|freeTextSearch:freeText">
+        <td *ngIf="!editing && loggedUser && loggedUser.userRole == 'manager'">
+            <img src="assets/delete-icon.png" (click)="deleteOrder(item)"/>
+            <img src="assets/edit-icon.png" (click)="editOrder(item)"/></td>
+        <td *ngIf="editing && loggedUser && loggedUser.userRole == 'manager'">
+            <img src="assets/no-icon.png" (click)="cancel()"/><img src="assets/yes-icon.png" (click)="finishEdit()"/></td>
+        <td>{{item.orderId}}</td>
+        <td *ngIf="!editing">{{item.orderStart}}</td>
+        <td *ngIf="editing">
+            <dp-date-picker [ngModelOptions]="{standalone: true}" [(ngModel)]="firstDay" [config]="datePickerConfig">
+            </dp-date-picker></td>
+        <td *ngIf="!editing">{{item.orderEnd}}</td>
+        <td *ngIf="editing">
+            <dp-date-picker [(ngModel)]="lastDay" [ngModelOptions]="{standalone: true}" [config]="datePickerConfig" >
+            </dp-date-picker></td>
+        <td *ngIf="!editing">{{item.orderRealEnd}}</td>
+        <td *ngIf="editing">
+            <dp-date-picker [(ngModel)]="realLastDay" [ngModelOptions]="{standalone: true}"  [config]="datePickerConfig">
+            </dp-date-picker>
+            <img src="assets/no-icon.png" (click)="openOrder()" [hidden]="!realLastDay"/></td>
+        <td *ngIf="!editing"><label class="deleted" *ngIf="item.custId == 0">Deleted User</label>
+            <div *ngIf="item.custId > 0">{{item.customer.userName}}</div></td>
+        <td *ngIf="editing"><div *ngIf="item.custId > 0">{{item.customer.userName}}</div>
+            <div *ngIf="item.custId == 0">Deleted User</div>
+            <input type="number" placeholder="Enter customer id here" formControlName="customerId"></td>
+        <td *ngIf="!editing && item.vehicleNumber != 0">
+            <a *ngIf="item.vehicleNumber != 0" (click)="vehicleDesc(item.vehicleType.modelId)">
+                {{item.vehicleType.modelName}}</a><br/>{{item.vehicleNumber}}</td>
+        <td *ngIf="!editing && item.vehicleNumber == 0"><label class="deleted">Deleted Vehicle</label></td>
+        <td *ngIf="editing"><input type="number" formControlName="vehicleNumber"/></td>
+        <td *ngIf="!editing"><div *ngIf="item.empRegister > 0">{{item.employee.userName}}</div>
+            <div *ngIf="item.empRegister == 0 && item.vehicleNumber > 0 && item.custId > 0 && item.orderRealEnd == null">
+                <a [routerLink]="['/orderFin', item.orderId]">
+                Close Order</a></div>
+            <div *ngIf="item.empRegister < 0"><label class="deleted">Deleted Employee</label></div></td>
+        <td *ngIf="editing"><div *ngIf="item.empRegister < 0">Deleted Employee</div>
+            <div *ngIf="!editEmp"><img src="assets/edit-icon.png" (click)="editEmployee()"/>
+            <div *ngIf="item.empRegister > 0">{{item.employee.userName}}</div></div>
+            <div *ngIf="editEmp">
+            <select formControlName="empRegister" *ngIf="employees">
+                <option *ngFor="let employee of employees">{{employee.userNick}}</option>
+            </select></div></td>
+    </tr>
+</table><br/>
+
+<!----------------------------(Validation errors)---------------------------->
+<label *ngIf="subZeroVal">Vehicle number can't go below 0!</label><br/>
+<label *ngIf="vehicleDoesntExistVal">Vehicle number doesn't Exist!</label><br>
+<label *ngIf="userDoesntExistVal">User doesn't Exist!</label><br>
+<label *ngIf="!compareVal">Second date comes before first date!</label><br/><br>

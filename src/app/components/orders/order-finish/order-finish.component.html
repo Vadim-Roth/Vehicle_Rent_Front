@@ -1,0 +1,53 @@
+<!----------------------------(Order details)---------------------------->
+<table class="ordersWrapper" *ngIf="order">
+    <tr>
+        <th>Order Id</th><th>Order Start</th><th>Order End</th><th>Order Real End</th><th>Employee Registering</th>
+    </tr>
+    <tr><td>{{order.orderId}}</td>
+        <td>{{order.orderStart}}</td>
+        <td>{{order.orderEnd}}</td>
+        <td>{{today| date: 'dd/MM/yyyy'}}</td>
+        <td>{{user.userName}}</td>
+    </tr>
+</table><br/>
+
+<!----------------------------(Vehicle details)---------------------------->
+<table *ngIf="vehicleSelected && vehicleTypeSelected">
+    <tr>
+        <th>Manufacturer</th><th>Model Name</th><th>Daily Cost</th><th>Daily Delay</th>
+        <th>Production Year</th><th>Gear</th><th>Vehicle Number</th><th>Speedometer</th>
+    </tr><tr>
+    <td>{{vehicleTypeSelected.manufacturer}}</td>
+    <td>{{vehicleTypeSelected.modelName}}</td>
+    <td>{{vehicleTypeSelected.dailyCost}}₪</td>
+    <td>{{vehicleTypeSelected.dailyDelay}}₪</td>
+    <td>{{vehicleTypeSelected.prodYear}}</td>
+    <td>{{vehicleTypeSelected.gear}}</td>
+    <td>{{vehicleSelected.vehicleNumber}}</td>
+    <td>{{vehicleSelected.currentKilos}}</td></tr>
+</table><br/>
+
+<!----------------------------(Customer details)---------------------------->
+<table class="customer" *ngIf="customer"><tr>
+    <th>Full Name</th><th>User Name</th><th>Email</th></tr>
+    <tr><td>{{customer.userName}}</td>
+    <td>{{customer.userNick}}</td>
+    <td>{{customer.userEmail}}</td></tr>
+</table><br/>
+
+<!----------------------------(Employee options)---------------------------->
+<label>New speedometer: </label>
+<input type="number" [(ngModel)]="newSpeed"><br/>
+<span *ngIf="!speedValidation">New speedometer can only go up!</span><br/><br/>
+
+<!----------------------------(Calculations)---------------------------->
+<div *ngIf="vehicleTypeSelected">
+    <label>Days Used: </label>
+    <span>{{daysUsed}} days X {{vehicleTypeSelected.dailyCost}}₪ = {{fairUse}}₪</span><br/>
+    <label>Days Used Extra: </label>
+    <span>{{daysUsedExtra}} days X {{vehicleTypeSelected.dailyDelay}}₪ = {{extraUse}}₪</span><br/><br/>
+    <label>Total: </label>
+    <span>{{fairUse}}₪ + {{extraUse}}₪ = {{totalSum}}₪</span><br/><br/>
+
+    <button (click)="submit()">Close Order</button>
+</div>

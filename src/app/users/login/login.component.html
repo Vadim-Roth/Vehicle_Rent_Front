@@ -1,0 +1,16 @@
+<br/><br/><br/><br/>
+<!----------------------------(Login form)---------------------------->
+<div>
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <label>User Name: </label>
+        <input type="text" formControlName="userName" /><br/><br/>
+        <div *ngIf="!nameValidation" class="validationError">User Name {{userStr}} doesn't exists!</div><br/>
+        <label>Password: </label>
+        <input type="password" formControlName="password" /><br/><br/>
+        <label class="validationError" [hidden]="loginForm.valid">Fill out the empty fields</label><br/>
+        <button [disabled]="loginForm.invalid">Login</button><br/><br/>
+        <div *ngIf="!passValidation" class="validationError">Wrong password!</div><br/><br/>
+<!----------------------------(Sign-up redirection)---------------------------->
+        <label (click)="signUp()" class="signUp">Not a member? Sign-Up for free!</label>
+    </form>
+</div>

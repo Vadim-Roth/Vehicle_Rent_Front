@@ -1,0 +1,65 @@
+h1{
+    color: Red;
+    text-align: left;
+    font-size: 50px;
+}
+a{
+    font-size: 20px;
+        padding: 5px;
+        text-decoration: none;
+        &:hover {
+            cursor: pointer;
+            background-color: Indigo;
+            padding: 7px;
+            font-size: 22px;
+        }
+}
+.homeBtn{
+    color: magenta;
+}
+.logOut{
+    color: orange;
+    background-color: darkslategrey;
+    position: absolute;
+    right:25px;
+    top:30px;
+}
+.usersBtn{
+    color: gold;
+}
+.accountBtn{
+    color: gold;
+}
+.latestBtn{
+    color: red;
+}
+.ordersBtn{
+    color: blue;
+}
+.branchesBtn{
+    border-color: lightgreen;
+    color: lightgreen;
+}
+img{
+    height:80px;
+    width:150px;
+    background-color: false;
+}
+.btnDiv{
+    position:absolute;
+    right:0;
+    top:90px;
+    a{
+        margin-right:20px;
+        text-align-last: right;
+        background-color: black;
+    }
+}
+.hello{
+    position:absolute;
+    right:200px;
+    top:30px;
+    color:blue;
+    font-weight: bold;
+    font-size: large;
+}

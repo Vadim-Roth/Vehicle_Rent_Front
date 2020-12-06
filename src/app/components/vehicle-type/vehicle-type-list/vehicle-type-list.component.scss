@@ -1,0 +1,78 @@
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+  }
+th{
+    background-color: Gold;
+    font-size: 25px;
+}
+span{
+    font-size: 20px;
+    color:indigo;
+    margin-right: 5px;
+}
+.vehicleTypesWrapper {
+    .vehicleTypeItem {
+        font-size: 20px;
+        &:hover {
+            background-color: indigo;
+            color: white;
+        }
+    }
+}
+.error{
+    background-color:coral;
+}
+
+.message{
+    background-color:lightgreen;
+}
+img{
+    height:30px;
+    width: 30px;
+    &:hover {
+        cursor: pointer;
+    }
+}
+.searchDiv{
+    border: 2px solid black;
+    border-radius: 9px;
+    margin: 10px;
+    padding: 10px;
+    background-color: Turquoise;
+}
+.smallBox::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.smallBox{
+    width: 40px;
+}
+a{
+    font-size: 20px;
+    padding: 5px;
+    text-decoration: none;
+    color:white;
+    background-color: Indigo;
+    &:hover {
+        cursor: pointer;
+        color: gold;
+        padding: 7px;
+        font-size: 22px;
+    }
+}
+.vehicles{
+    background-color: blue;
+    color: gold;
+    &:hover {
+        cursor: pointer;
+    }
+}
+label{
+    font-size: large;
+    font-weight: bold;
+    color: red;
+}
+.addRow{
+    background-color: lightgreen;
+}

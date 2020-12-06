@@ -1,0 +1,19 @@
+<!----------------------------(Logo and log options)---------------------------->
+<h1><img src="assets/logo.png" id="logo"> {{title}}</h1>
+<div *ngIf='logged'>
+    <label class='hello'>Hello {{loggedUser.userNick}}</label>
+    <a class="logOut" (click)="logOut()">Log Out</a>
+</div>
+
+<!----------------------------(Buttons menu)---------------------------->
+<div display="flex" class="btnDiv">
+    <a [routerLink]="['/homepg']" class="homeBtn">Home Page</a>
+    <a [routerLink]="['/userList']" *ngIf='logged && loggedUser.userRole == "manager"' class="usersBtn">User List</a>
+    <a [routerLink]="['/latestv']" class="latestBtn">Latest Vehicles</a>
+    <a [routerLink]="['/orders']" *ngIf='logged && loggedUser.userRole != "customer"' class="ordersBtn">Orders</a>
+    <a [routerLink]="['/branches']" class="branchesBtn">Our Branches</a>
+    <a [routerLink]="['/login']" *ngIf='!logged' class="accountBtn">Login/Sign-Up</a>
+    <a [routerLink]="['/profile', loggedUser.userId]" *ngIf='logged' class="accountBtn">Profile</a>
+    <br><br>
+</div>
+<router-outlet></router-outlet>

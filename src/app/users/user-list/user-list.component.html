@@ -1,0 +1,48 @@
+<!----------------------------(Search options)---------------------------->
+<div class='searchDiv'>
+    <span> Search Options: </span>
+    <select [(ngModel)]="searchOptions" >
+        <option value="Customer">Customers</option>
+        <option value="Employee">Employees</option>
+        <option value="All">All</option>
+    </select>
+    <span> Free text: </span><input [(ngModel)]="freeText"/>
+</div>
+
+<!----------------------------(User list table)---------------------------->
+<table [formGroup]="editForm" class="userListWrapper" *ngIf="userList" (ngSubmit)="finishEdit()">
+    <tr>
+        <th>Edit</th><th>Id</th><th>Picture</th><th>Full Name</th><th>User Name</th><th>Birth Day</th><th>Gender</th><th>Email</th>
+        <th>Password</th><th>Role</th>
+    </tr>
+    <tr [ngClass]="{ 'message': item.userRole == 'customer', 'error': item.userRole == 'employee' }"
+        class="userListItem" *ngFor="let item of userList|userOptionSearch:searchOptions|freeTextUserSearch:freeText">
+        <td *ngIf="!editing">
+            <img src="assets/delete-icon.png" (click)="deleteUser(item)" *ngIf="manager.userId != item.userId"/>
+            <img src="assets/edit-icon.png" (click)="editUser(item)"/></td>
+        <td *ngIf="editing"><img src="assets/no-icon.png" (click)="cancel()"/>
+            <img src="assets/yes-icon.png" (click)="finishEdit()" *ngIf="editForm.valid"/></td>
+        <td>{{item.userId}}</td>
+        <td><img *ngIf="item.userPicture != null" class="profilePic" src="assets/users/{{item.userPicture}}" /></td>
+        <td *ngIf="!editing">{{item.userName}}</td><td *ngIf="editing"><input formControlName="userName"/></td>
+        <td *ngIf="!editing">{{item.userNick}}</td><td *ngIf="editing"><input formControlName="userNick"/></td>
+        <td>{{item.userBday}}</td>
+        <td *ngIf="!editing">{{item.userGender}}</td>
+        <td *ngIf="editing"><select formControlName="userGender" >
+            <option value="Else">Else</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select></td>
+        <td *ngIf="!editing">{{item.userEmail}}</td><td *ngIf="editing"><input formControlName="userEmail"/></td>
+        <td *ngIf="!editing">{{item.userPass}}</td><td *ngIf="editing"><input formControlName="userPass"/></td>
+        <td *ngIf="!editing">{{item.userRole}}</td>
+        <td *ngIf="editing"><select formControlName="userRole" >
+            <option value="customer">customer</option>
+            <option value="employee">employee</option>
+            <option value="manager">manager</option>
+        </select></td>
+    </tr>
+</table><br/>
+
+<!----------------------------(Validation errors)---------------------------->
+<label *ngIf="!editForm.valid">Fill out the empty fields with letters and numbers only!</label>

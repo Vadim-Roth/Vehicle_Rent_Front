@@ -1,0 +1,45 @@
+<!----------------------------(Vehicle type details)---------------------------->
+<table class="vehicleType" *ngIf="vehicleSelected && vehicleTypeSelected">
+    <tr>
+        <th>Model Name</th><th>Daily Cost</th><th>Daily Delay</th>
+        <th>Production Year</th><th>Gear</th><th>Vehicle Number</th><th>Speedometer</th>
+    </tr><tr>
+    <td>{{vehicleTypeSelected.modelName}}</td>
+    <td>{{vehicleTypeSelected.dailyCost}}₪</td>
+    <td>{{vehicleTypeSelected.dailyDelay}}₪</td>
+    <td>{{vehicleTypeSelected.prodYear}}</td>
+    <td>{{vehicleTypeSelected.gear}}</td>
+    <td>{{vehicleSelected.vehicleNumber}}</td>
+    <td>{{vehicleSelected.currentKilos}}</td></tr>
+</table><br/>
+
+<!----------------------------(Customer details)---------------------------->
+<table class="user" *ngIf="user"><tr>
+    <th>Full Name</th><th>User Name</th><th>Email</th></tr>
+    <tr><td>{{user.userName}}</td>
+    <td>{{user.userNick}}</td>
+    <td>{{user.userEmail}}</td></tr>
+</table><br/>
+
+<!----------------------------(Date choice)---------------------------->
+<label>First Day: </label><br/>
+<dp-date-picker [(ngModel)]="firstDay" [config]="datePickerConfig"></dp-date-picker><br/>
+<label>Last Day: </label><br/>
+<dp-date-picker [(ngModel)]="lastDay" [config]="datePickerConfig"></dp-date-picker><br/><br/>
+<button (click)="chooseDates()">Submit dates</button><br/>
+
+<!----------------------------(Date validation errors)---------------------------->
+<span *ngIf="emptyDate">Please enter all dates</span><br/>
+<span *ngIf="compareVal">Last day is ealier than the first day</span><br/>
+
+<!----------------------------(Order confirmation)---------------------------->
+<div *ngIf="orderAvailable">
+    <table>
+        <th>Order Start</th><th>Order End</th><th>Total Days</th><th>Total Price</th>
+        <tr><td>{{order.orderStart}}</td>
+            <td>{{order.orderEnd}}</td>
+            <td>{{daysBetween}}</td>
+            <td>{{totalPrice}}₪</td></tr>
+    </table><br/>
+    <button (click)="submit()">Order vehicle</button><br/>
+</div>

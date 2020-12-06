@@ -1,0 +1,55 @@
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+    .profilePic{
+        height:100px;
+        width:100px;
+        &:hover {
+            cursor: auto;
+        }
+    }
+  }
+th{
+    background-color: Gold;
+    font-size: 25px;
+}
+.userListWrapper {
+    .userListItem {
+        font-size: 20px;
+        &:hover {
+            background-color: indigo;
+            color: white;
+        }
+    }
+}
+.error{
+    background-color:coral;
+}
+
+.message{
+    background-color:lightgreen;
+}
+.searchDiv{
+    border: 2px solid black;
+    border-radius: 9px;
+    margin: 10px;
+    padding: 10px;
+    background-color: Turquoise;
+}
+span{
+    font-size: 20px;
+    color:indigo;
+    margin-right: 5px;
+}
+img{
+    height:30px;
+    width: 30px;
+    &:hover {
+        cursor: pointer;
+    }
+}
+label{
+    font-size: large;
+    font-weight: bold;
+    color: red;
+}

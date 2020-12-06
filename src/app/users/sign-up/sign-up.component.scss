@@ -1,0 +1,34 @@
+.emptyFields{
+    font-size: large;
+    font-weight: bold;
+    color: red;
+
+    position:absolute;
+    height: 25px;
+    right:200px;
+    top:250px;
+}
+.validationError{
+    font-size: large;
+    font-weight: bold;
+    color: red;
+/*
+    position:absolute;
+    height: 25px;
+    right:600px;
+    top:500px;
+    */
+}
+.bDay{
+    width: 25px;
+}
+.bDayYear{
+    width: 50px;
+}
+.requiredF{
+    color: red;
+}
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

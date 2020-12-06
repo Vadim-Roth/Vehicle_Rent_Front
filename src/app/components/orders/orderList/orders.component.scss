@@ -1,0 +1,62 @@
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+  }
+th{
+    background-color: Gold;
+    font-size: 25px;
+}
+.ordersWrapper {
+    .orderItem {
+        font-size: 20px;
+        &:hover {
+            background-color: indigo;
+            color: white;
+            .deleted{
+                color:orangered;
+            }
+        }
+    }
+}
+.error{
+    background-color:coral;
+}
+.message{
+    background-color:lightgreen;
+}
+span{
+    font-size: 20px;
+    color:indigo;
+    margin-right: 5px;
+}
+.searchDiv{
+    border: 2px solid black;
+    border-radius: 9px;
+    margin: 10px;
+    padding: 10px;
+    background-color: Turquoise;
+}
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.smallBox{
+    width: 40px;
+}
+a{
+    cursor: pointer;
+    color:blue;
+    background-color: yellow;
+}
+img{
+    height:30px;
+    width: 30px;
+    &:hover {
+        cursor: pointer;
+    }
+}
+label{
+    font-size: large;
+    font-weight: bold;
+    color: red;
+}

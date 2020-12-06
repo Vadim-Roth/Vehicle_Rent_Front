@@ -1,0 +1,83 @@
+<!-------------------------------(User details)----------------------------->
+<div *ngIf="user && !clickedEdited" class="userInfo" >
+        <img *ngIf="user && user.userPicture != null" class="profilePic" src="assets/users/{{user.userPicture}}" />
+        <label>Full Name: {{user.userName}}</label><br/>
+        <label>User Name: {{user.userNick}}</label><br/>
+        <label *ngIf="user.userBday">Birth Day: {{user.userBday}}</label><br/>
+        <label>Gender: {{user.userGender}}</label><br/>
+        <label>Email: {{user.userEmail}}</label><br/>
+        <button (click)='edit()'>Edit info</button>
+</div>
+
+<!-------------------------------(Search options)----------------------------->
+<div *ngIf="!clickedEdited">
+        <div class="searchDiv" *ngIf="userOrders.length > 0">
+                <span> Search Options: </span>
+                <select [(ngModel)]="searchOptions" >
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option>
+                        <option value="All">All</option>
+                </select>
+        </div>
+
+        <!-------------------------------(User orders)----------------------------->
+        <table class="ordersWrapper" *ngIf="userOrders.length > 0">
+                <tr>
+                        <th>Order Id</th><th>Order Start</th><th>Order End</th><th>Order Real End</th>
+                        <th>Vehicle Type</th><th>Vehicle Number</th>
+                </tr>
+                <tr [ngClass]="{ 'message': item.orderRealEnd != null, 'error': item.orderRealEnd == null }"
+                        class="orderItem" *ngFor="let item of userOrders|orderTypeSearch:searchOptions;index as index;">
+                        <td>{{item.orderId}}</td>
+                        <td>{{item.orderStart}}</td>
+                        <td>{{item.orderEnd}}</td>
+                        <td>{{item.orderRealEnd}}</td>
+                        <td *ngIf="item.vehicleNumber != 0"><a (click)="vehicleDesc(item.vehicleType.modelId)">
+                                {{item.vehicleType.modelName}}</a></td>
+                        <td *ngIf="item.vehicleNumber == 0">Deleted Vehicle</td>
+                        <td *ngIf="item.vehicleNumber != 0">{{item.vehicleNumber}}</td>
+                        <td *ngIf="item.vehicleNumber == 0">Deleted Vehicle</td>
+                </tr>
+        </table>
+</div>
+        
+<!-------------------------------(Edit form)----------------------------->
+<div *ngIf="clickedEdited" class="userInfo">
+        <img *ngIf="user && user.userPicture != null" class="profilePic" src="assets/users/{{user.userPicture}}" />
+        <form [formGroup]="editForm" (ngSubmit)="save()">
+                <label>Full Name: </label>
+                <input formControlName="fullName"/><br/>
+                <label>Gender: </label>
+                <select formControlName="gender" >
+                        <option value="Else">Else</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                </select><br/><br/>
+                <label>Birth Day: </label>
+                <dp-date-picker [(ngModel)]="birthDay" [ngModelOptions]="{standalone: true}" [config]="datePickerConfig">
+                </dp-date-picker><br/>
+                <div *ngIf="!date17Val" class="validationError">User can't be below 17!</div><br/>
+
+                <label>Change profile picture: </label><br/>
+                <div class="form-group">
+                        <input type="file" (change)="onFileSelected($event)">
+                </div><br/><br/>
+
+                <label>Old Password: </label>
+                <input type="password" formControlName="oldPass"/><br/>
+                <label class="validationError" [hidden]="oldPassVal">
+                        Wrong password!</label><br/>
+                <label>New Password: </label>
+                <input type="password" formControlName="newPass"/><br/>
+                <label>Confirm New Password: </label>
+                <input type="password" formControlName="conPass"/><br/>
+                <label class="validationError" [hidden]="matchVal">
+                        Passwords don't match!</label><br/>
+                <label class="emptyFields" [hidden]="editForm.valid">
+                        Fill out the empty fields with letters and numbers only!</label><br/>
+                <label class="validationError" [hidden]="passSize">
+                        New password must be at least 8 characters!</label><br/><br/>
+                <button [disabled]="editForm.invalid">Save</button>
+                <a (click)="cancel()">Cancel</a>
+        </form>
+</div>

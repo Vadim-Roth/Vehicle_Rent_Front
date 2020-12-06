@@ -1,0 +1,74 @@
+<!----------------------------(Search options)---------------------------->
+<div class='searchDiv'>
+    <span>Search by model name:</span><input [(ngModel)]="modelName" />
+    <span> Search by Gear:</span>
+    <select [(ngModel)]="gear" >
+        <option value="All">All</option>
+        <option value="Auto">Auto</option>
+        <option value="Manual">Manual</option>
+    </select>
+    <span> Min Price: </span><input class='smallBox' type="number" [(ngModel)]="minPrice" />
+    <span> Max Price: </span><input class='smallBox' type="number" [(ngModel)]="maxPrice" /><br/>
+    <span> Min production year: </span><input class='smallBox' type="number" [(ngModel)]="minYear" />
+    <span> Max production year: </span><input class='smallBox' type="number" [(ngModel)]="maxYear" />
+    <span> Free text: </span><input [(ngModel)]="freeText" />
+</div>
+<a *ngIf="loggedUser && loggedUser.userRole == 'manager'" (click)="addVehicleType()">Add a new vehicle type</a><br/><br/>
+
+<!----------------------------(Vehicle types table)---------------------------->
+<table class="vehicleTypesWrapper" [formGroup]="vehicleTypeForm">
+    <tr>
+        <th *ngIf="loggedUser && loggedUser.userRole == 'manager'">Edit</th>
+        <th>Manufacturer</th><th>Model Name</th><th>Daily Cost</th><th>Daily Delay</th>
+        <th>Production Year</th><th>Gear</th><th *ngIf="!editing && !added">Available</th>
+    </tr>
+    <tr [ngClass]="{ 'message': item.available > 0, 'error': item.available == 0 }"
+        class="vehicleTypeItem" *ngFor="let item of vehicleTypes|modelNameSearch:modelName|gearSearch:gear
+        |maxYearSearch:maxYear|minYearSearch:minYear|maxCostSearch:maxPrice|minCostSearch:minPrice|freeTextSearch:freeText">
+        <td *ngIf="!editing && loggedUser && loggedUser.userRole == 'manager'">
+            <img src="assets/delete-icon.png" (click)="deleteVehicleType(item)"/>
+            <img src="assets/edit-icon.png" (click)="editVehicleType(item)"/></td>
+        <td *ngIf="editing && loggedUser && loggedUser.userRole == 'manager'">
+            <img src="assets/no-icon.png" (click)="cancel()"/>
+            <img src="assets/yes-icon.png" (click)="finishEdit()" *ngIf="vehicleTypeForm.valid"/></td>
+        <td *ngIf="!editing">{{item.manufacturer}}</td>
+        <td *ngIf="editing"><input formControlName="manufacturer"/></td>
+        <td *ngIf="!editing">{{item.modelName}}</td>
+        <td *ngIf="editing"><input formControlName="modelName"/></td>
+        <td *ngIf="!editing">{{item.dailyCost}}₪</td>
+        <td *ngIf="editing"><input type="number" formControlName="dailyCost"/>₪</td>
+        <td *ngIf="!editing">{{item.dailyDelay}}₪</td>
+        <td *ngIf="editing"><input type="number" formControlName="dailyDelay"/>₪</td>
+        <td *ngIf="!editing">{{item.prodYear}}</td>
+        <td *ngIf="editing"><input type="number" formControlName="productionYear"/></td>
+        <td *ngIf="!editing">{{item.gear}}</td>
+        <td *ngIf="editing">
+            <select formControlName="gear" >
+                <option value="Auto">Auto</option>
+                <option value="Manual">Manual</option>
+            </select></td>
+        <td *ngIf="!editing && !added" class='vehicles' [routerLink]="['/vehicles', item.modelId]">
+            <ng-template [ngIf]="item.available > 0" [ngIfElse]="notF" >{{item.available}}</ng-template>
+            <ng-template #notF><img src="assets/no-icon.png"/></ng-template></td>
+    </tr>
+
+    <!----------------------------(Add new vehicle type)---------------------------->
+    <tr *ngIf="added" class="addRow">
+        <td><img src="assets/no-icon.png" (click)="cancel()"/>
+            <img src="assets/yes-icon.png" (click)="confirmVehicleType()" *ngIf="vehicleTypeForm.valid"/></td>
+        <td><input formControlName="manufacturer"/></td>
+        <td><input formControlName="modelName"/></td>
+        <td><input type="number" formControlName="dailyCost"/>₪</td>
+        <td><input type="number" formControlName="dailyDelay"/>₪</td>
+        <td><input type="number" formControlName="productionYear"/></td>
+        <td><select formControlName="gear" >
+            <option value="Auto">Auto</option>
+            <option value="Manual">Manual</option>
+        </select></td>
+    </tr>
+</table><br/>
+
+<!----------------------------(Validation errors)---------------------------->
+<label *ngIf="!vehicleTypeForm.valid">Fill out the empty fields with letters and numbers only!</label><br/>
+<label *ngIf="subZeroVal">Prices can't go below 0!</label><br/>
+<label *ngIf="subValueVal">Daily cost can't be higher than daily delay!</label>

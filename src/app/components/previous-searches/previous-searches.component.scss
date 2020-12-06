@@ -1,0 +1,38 @@
+span{
+    font-size: 30px;
+    color:red;
+    margin-right: 5px;
+}
+.vehicleTypes{
+    display: grid;
+    grid-template-columns: repeat(3, 10fr);
+}
+ul{
+    .modelName{
+        font-size: 25px;
+        color: red;
+    }
+    h2{
+        font-size: 30px;
+        color:indigo;
+    }
+    font-size: 20px;
+    border: 2px solid black;
+    border-radius: 9px;
+    display: grid;
+    justify-items: center;
+    margin: 10px;
+    padding: 10px;
+    background-color: lightgreen;
+    &:hover {
+        h2{
+            color:white;
+        }
+        .modelName{
+            color: white;
+        }
+        cursor: pointer;
+        background-color: blue;
+        color:white;
+    }
+}
